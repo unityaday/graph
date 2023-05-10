@@ -1,0 +1,64 @@
+body {
+  margin: auto;
+}
+
+.gri {font: italic 16px sans-serif; fill: #6dd;}
+
+button {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  color: #333;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+button:active {
+  background-color: #ccc;
+}
+
+#svg-wrap {
+  margin: 20px;
+}
+
+svg {
+  cursor: crosshair;
+  display: block;
+  margin: auto;
+  border: 2px solid #000000;
+}
+
+.edge {
+  stroke: #000000;
+  stroke-width: 4px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  cursor: default;
+}
+
+.edge:hover {
+  stroke: #bb2323;
+}
+.dragLine {
+  stroke: #242424;
+  stroke-width: 4px;
+}
+
+.vertex {
+  cursor: pointer;
+  stroke: #000000;
+  stroke-width: 1px;
+}
+
+.vertex:hover {
+  stroke: #000000;
+  stroke-width: 3px;
+}
+
+.dragLine.hidden {
+  stroke-width: 0;
+}
