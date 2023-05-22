@@ -152,7 +152,7 @@ function click(d) {
     d3.select(this).transition().style("fill", "green");
     visited.add(d.id);
     for (var i = 0; i < links.length; i++) {
-      if (links[i].source.id === d && !visited.has(links[i].target.id)) {
+      if (links[i].source.id === d.id && !visited.has(links[i].target.id)) {
         nextVertex = links[i].target.id;
         stack.push(d.id);
         break;
@@ -310,5 +310,6 @@ d3.select("#clear").on("click", function () {
   stack = [];
   visited = new Set();
   nextVertex = null;
+  backstep = null;
   restart();
 });
