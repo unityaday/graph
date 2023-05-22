@@ -51,12 +51,12 @@ svg {
 .vertex {
   cursor: pointer;
   stroke: #000000;
-  stroke-width: 1px;
+  stroke-width: 2px;
 }
 
 .vertex:hover {
-  stroke: #000000;
-  stroke-width: 3px;
+  stroke: #445400;
+  stroke-width: 4px;
 }
 
 .dragLine.hidden {
