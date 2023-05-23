@@ -1,13 +1,19 @@
-var nodes = [];
+var nodes = [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
 
-var links = [];
+var links = [
+  { source: 0, target: 1 },
+  { source: 1, target: 3 },
+  { source: 2, target: 0 },
+  { source: 2, target: 4 },
+  { source: 2, target: 5 },
+];
 
 var lastNodeId = nodes.length - 1;
 var viewWid = document.documentElement.clientWidth;
 var viewH = document.documentElement.clientHeight;
 var w = 800;
 var h = 600;
-var rad = 15;
+var rad = 18;
 var colors = d3.schemeSet1;
 
 var svg = d3
@@ -19,7 +25,7 @@ var svg = d3
 //arrowhead
 var markerBoxWidth = 5;
 var markerBoxHeight = 5;
-var refX = rad / 2 + 1;
+var refX = rad / 2;
 var refY = markerBoxHeight / 2;
 var markerWidth = markerBoxHeight / 2;
 var markerHeight = markerBoxHeight / 2;
@@ -49,9 +55,7 @@ var dragLine = svg
   .attr("d", "M0,0L0,0");
 
 var edges = svg.append("g").selectAll(".edge");
-
 var vertices = svg.append("g").selectAll(".vertex");
-
 var titles = svg.append("g").selectAll(".title");
 
 var simulation = d3
@@ -63,7 +67,7 @@ var simulation = d3
       .strength(-250)
       .distanceMax(w / 2)
   )
-  .force("link", d3.forceLink().distance(100))
+  .force("link", d3.forceLink().distance(125))
   .force("x", d3.forceX(w / 2))
   .force("y", d3.forceY(h / 2))
   .on("tick", tick);
@@ -112,13 +116,82 @@ function restart() {
     })
     .on("contextmenu", removeNode)
     .merge(vertices);
-
   simulation.nodes(nodes);
   simulation.force("link").links(links);
   simulation.alpha(1).restart();
 }
 
 restart();
+
+var i = 1;
+
+function click(d) {
+  if (typeof visited == "undefined" || visited.length == 0) {
+    var toggleSwitch = document.getElementById("toggleSwitch");
+    var isChecked = toggleSwitch.checked;
+    if (isChecked) {
+      visited = dfs(nodes, links, d.id);
+    } else {
+      visited = bfs(nodes, links, d.id);
+    }
+    d3.select(this).transition().style("fill", "green");
+  } else {
+    if (visited[i] == d.id) {
+      i++;
+      d3.select(this).transition().style("fill", "green");
+    } else {
+      alert("ERROR");
+    }
+  }
+  if (i >= visited.length) {
+    alert("FINISHED");
+  }
+}
+
+function dfs(nodes, links, startNodeId) {
+  const visited = [];
+  const adjacencyList = {};
+  for (const node of nodes) {
+    adjacencyList[node.id] = [];
+  }
+  for (const link of links) {
+    adjacencyList[link.source.id].push(link.target.id);
+  }
+  function dfsHelper(nodeId) {
+    visited.push(nodeId);
+    for (const neighborId of adjacencyList[nodeId]) {
+      if (!visited.includes(neighborId)) {
+        dfsHelper(neighborId);
+      }
+    }
+  }
+  dfsHelper(startNodeId);
+  return visited;
+}
+
+function bfs(nodes, links, startNodeId) {
+  const visited = [];
+  const adjacencyList = {};
+  for (const node of nodes) {
+    adjacencyList[node.id] = [];
+  }
+  for (const link of links) {
+    adjacencyList[link.source.id].push(link.target.id);
+  }
+  const queue = [];
+  visited.push(startNodeId);
+  queue.push(startNodeId);
+  while (queue.length > 0) {
+    const currentNodeId = queue.shift();
+    for (const neighborId of adjacencyList[currentNodeId]) {
+      if (!visited.includes(neighborId)) {
+        visited.push(neighborId);
+        queue.push(neighborId);
+      }
+    }
+  }
+  return visited;
+}
 
 //
 
@@ -130,55 +203,6 @@ svg
     d3.event.preventDefault();
   })
   .on("mouseleave", hideDragLine);
-
-var stack = [];
-var visited = new Set();
-var nextVertex = null;
-
-function click(d) {
-  console.log(visited);
-  if (visited.size == 0) {
-    d3.select(this).transition().style("fill", "green");
-    visited.add(d.id);
-    for (var i = 0; i < links.length; i++) {
-      if (links[i].source.id === d.id) {
-        nextVertex = links[i].target.id;
-        stack.push(d.id);
-        break;
-      }
-    }
-  } else if (nextVertex == d.id) {
-    nextVertex = null;
-    d3.select(this).transition().style("fill", "green");
-    visited.add(d.id);
-    for (var i = 0; i < links.length; i++) {
-      if (links[i].source.id === d.id && !visited.has(links[i].target.id)) {
-        nextVertex = links[i].target.id;
-        stack.push(d.id);
-        break;
-      }
-    }
-    if (nextVertex == null) {
-      for (var k = 0; k <= stack.length; k++) {
-        backstep = stack.pop();
-        for (var i = 0; i < links.length; i++) {
-          if (
-            links[i].source.id === backstep &&
-            !visited.has(links[i].target.id)
-          ) {
-            stack.push(backstep);
-            nextVertex = links[i].target.id;
-            break;
-          }
-        }
-      }
-    }
-    if (nextVertex == null && visited.size == nodes.length) {
-      alert("That's it!");
-    }
-    console.log("Next Step is: " + nextVertex);
-  }
-}
 
 function addNode() {
   if (d3.event.button == 0) {
@@ -307,9 +331,74 @@ d3.select("#clear").on("click", function () {
   nodes.splice(0);
   links.splice(0);
   lastNodeId = -1;
-  stack = [];
-  visited = new Set();
-  nextVertex = null;
-  backstep = null;
+  visited = [];
+  i = 1;
   restart();
 });
+
+// DFS
+/*
+var stack = [];
+var visited = new Set();
+var nextVertex = null;
+
+function click(d) {
+  console.log(visited);
+  if (visited.size == 0) {
+    d3.select(this).transition().style("fill", "green");
+    visited.add(d.id);
+    for (var i = 0; i < links.length; i++) {
+      if (links[i].source.id === d.id) {
+        nextVertex = links[i].target.id;
+        stack.push(d.id);
+        break;
+      }
+    }
+  } else if (nextVertex == d.id) {
+    nextVertex = null;
+    d3.select(this).transition().style("fill", "green");
+    visited.add(d.id);
+    for (var i = 0; i < links.length; i++) {
+      if (links[i].source.id === d.id && !visited.has(links[i].target.id)) {
+        nextVertex = links[i].target.id;
+        stack.push(d.id);
+        break;
+      }
+    }
+    if (nextVertex == null) {
+      for (var k = 0; k <= stack.length; k++) {
+        backstep = stack.pop();
+        for (var i = 0; i < links.length; i++) {
+          if (
+            links[i].source.id === backstep &&
+            !visited.has(links[i].target.id)
+          ) {
+            stack.push(backstep);
+            nextVertex = links[i].target.id;
+            break;
+          }
+        }
+      }
+    }
+    if (nextVertex == null && visited.size == nodes.length) {
+      alert("That's it!");
+    }
+    console.log("Next Step is: " + nextVertex);
+  }
+}
+*/
+
+// function toggleSwitchChanged() {
+//   var toggleSwitch = document.getElementById("toggleSwitch");
+//   var isChecked = toggleSwitch.checked;
+
+//   if (isChecked) {
+//     // Текущее состояние переключателя включено
+//     // Вы можете выполнить нужные действия здесь
+//     console.log("Переключатель включен");
+//   } else {
+//     // Текущее состояние переключателя выключено
+//     // Вы можете выполнить нужные действия здесь
+//     console.log("Переключатель выключен");
+//   }
+// }
