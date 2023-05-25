@@ -10,9 +10,10 @@ button {
   display: inline-block;
   padding: 5px 10px;
   background-color: #eee;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
+  border-radius: 20px;
   margin-top: 10px;
-  color: #333;
+  color: #000000;
 }
 
 button:hover {
@@ -32,6 +33,10 @@ svg {
   display: block;
   margin: auto;
   border: 2px solid #000000;
+}
+
+.title {
+  font: bold 30px sans-serif;
 }
 
 .edge {
@@ -70,10 +75,13 @@ svg {
   display: inline-block;
   width: 120px;
   height: 34px;
+  border: #000000;
+  border-width: 4px;
  }
  
  .switch input {
   display: none;
+  
  }
  
  .slider {
@@ -87,9 +95,11 @@ svg {
   -webkit-transition: .4s;
   transition: .4s;
   border-radius: 34px;
+  border: #000000;
  }
  
  .slider:before {
+  border-width: 4px;
   position: absolute;
   content: "";
   height: 26px;

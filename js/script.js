@@ -78,8 +78,8 @@ function tick() {
     .attr("y1", (d) => d.source.y)
     .attr("x2", (d) => d.target.x)
     .attr("y2", (d) => d.target.y);
-
   vertices.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+  titles.attr("x", (d) => d.x).attr("y", (d) => d.y);
 }
 
 function restart() {
@@ -111,11 +111,25 @@ function restart() {
     .on("mouseover", function (d) {
       var thisVertex = d3.select(this);
       if (thisVertex.select("title").empty()) {
-        thisVertex.append("title").text("v" + d.id);
+        thisVertex.append("title").text(d.id);
       }
     })
     .on("contextmenu", removeNode)
     .merge(vertices);
+
+  titles = titles.data(nodes, (d) => d.id);
+  titles.exit().remove();
+  titles = titles
+    .enter()
+    .append("text")
+    .attr("class", "title")
+    .text((d) => d.id)
+    .attr("text-anchor", "middle")
+    .attr("dy", ".35em")
+    .attr("id", (d) => "l" + d.id)
+    .style("pointer-events", "none")
+    .merge(titles);
+  nodes = nodes.sort((a, b) => a.id - b.id);
   simulation.nodes(nodes);
   simulation.force("link").links(links);
   simulation.alpha(1).restart();
@@ -130,9 +144,9 @@ function click(d) {
     var toggleSwitch = document.getElementById("toggleSwitch");
     var isChecked = toggleSwitch.checked;
     if (isChecked) {
-      visited = dfs(nodes, links, d.id);
+      visited = dfs(d.id);
     } else {
-      visited = bfs(nodes, links, d.id);
+      visited = bfs(d.id);
     }
     d3.select(this).transition().style("fill", "green");
   } else {
@@ -148,15 +162,20 @@ function click(d) {
   }
 }
 
-function dfs(nodes, links, startNodeId) {
+function dfs(startNodeId) {
+  turnOff();
   const visited = [];
-  const adjacencyList = {};
+  const adjacencyList = new Map();
   for (const node of nodes) {
     adjacencyList[node.id] = [];
   }
   for (const link of links) {
     adjacencyList[link.source.id].push(link.target.id);
   }
+  for (const node of nodes) {
+    adjacencyList[node.id] = adjacencyList[node.id].toSorted((a, b) => a - b);
+  }
+  console.log(adjacencyList);
   function dfsHelper(nodeId) {
     visited.push(nodeId);
     for (const neighborId of adjacencyList[nodeId]) {
@@ -168,16 +187,21 @@ function dfs(nodes, links, startNodeId) {
   dfsHelper(startNodeId);
   return visited;
 }
-
-function bfs(nodes, links, startNodeId) {
+function bfs(startNodeId) {
+  console.log(startNodeId);
+  turnOff();
   const visited = [];
-  const adjacencyList = {};
+  const adjacencyList = new Map();
   for (const node of nodes) {
     adjacencyList[node.id] = [];
   }
   for (const link of links) {
     adjacencyList[link.source.id].push(link.target.id);
   }
+  for (const node of nodes) {
+    adjacencyList[node.id] = adjacencyList[node.id].toSorted((a, b) => a - b);
+  }
+  console.log(adjacencyList);
   const queue = [];
   visited.push(startNodeId);
   queue.push(startNodeId);
@@ -191,6 +215,11 @@ function bfs(nodes, links, startNodeId) {
     }
   }
   return visited;
+}
+
+function turnOff() {
+  svg.on("mousedown", null).on("mousemove", null);
+  d3.selectAll("circle").on("mousedown", null).on("mouseup", null);
 }
 
 //
@@ -215,6 +244,7 @@ function addNode() {
 
 function removeNode(d) {
   nodes.splice(nodes.indexOf(d), 1);
+  d3.selectAll(`#title${d.id}`).remove();
   var linksToRemove = links.filter((l) => l.source === d || l.target === d);
   linksToRemove.map((l) => {
     links.splice(links.indexOf(l), 1);
@@ -288,6 +318,19 @@ function endDragLine(d) {
   var newLink = { source: mousedownNode, target: d };
   links.push(newLink);
 }
+
+//CLEAR
+d3.select("#clear").on("click", () => {
+  svg.on("mousedown", addNode).on("mousemove", updateDragLine);
+  nodes.splice(0);
+  links.splice(0);
+  d3.selectAll("text").remove();
+  lastNodeId = -1;
+  visited = [];
+  i = 1;
+  restart();
+});
+
 //
 
 // var lastKeyDown = -1;
@@ -325,16 +368,6 @@ function endDragLine(d) {
 //     vertices.on("mousedown", null);
 //   }
 // }
-
-//CLEAR
-d3.select("#clear").on("click", function () {
-  nodes.splice(0);
-  links.splice(0);
-  lastNodeId = -1;
-  visited = [];
-  i = 1;
-  restart();
-});
 
 // DFS
 /*
