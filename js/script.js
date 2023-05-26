@@ -1,11 +1,10 @@
-var nodes = [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
+var nodes = [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
 var links = [
   { source: 0, target: 1 },
   { source: 1, target: 3 },
   { source: 2, target: 0 },
   { source: 2, target: 4 },
-  { source: 2, target: 5 },
 ];
 
 var lastNodeId = nodes.length - 1;
@@ -34,6 +33,9 @@ var arrowPoints = [
   [0, 5],
   [5, 2.5],
 ];
+
+$(".check-icon").hide();
+
 svg
   .append("defs")
   .append("marker")
@@ -129,7 +131,6 @@ function restart() {
     .attr("id", (d) => "l" + d.id)
     .style("pointer-events", "none")
     .merge(titles);
-  nodes = nodes.sort((a, b) => a.id - b.id);
   simulation.nodes(nodes);
   simulation.force("link").links(links);
   simulation.alpha(1).restart();
@@ -140,6 +141,33 @@ restart();
 var i = 1;
 
 function click(d) {
+  /*
+  var matrixTable = d3.select("#matrix").append("table");
+  var matrixRows = matrixTable
+    .selectAll("tr")
+    .data(nodes)
+    .enter()
+    .append("tr")
+    .text((d) => d.id);
+  matrixRows
+    .selectAll("td")
+    .data((rowIndex) =>
+      nodes.map((columnIndex) => {
+        var link = links.find(
+          (l) => l.source === rowIndex && l.target === columnIndex
+        );
+        return {
+          rowIndex,
+          columnIndex,
+          linkExists: !!link,
+        };
+      })
+    )
+    .enter()
+    .append("td")
+    .style("background-color", (d) => (d.linkExists ? "green" : "white"))
+    .text((d) => (d.linkExists ? "1" : "0"));
+  */
   if (typeof visited == "undefined" || visited.length == 0) {
     var toggleSwitch = document.getElementById("toggleSwitch");
     var isChecked = toggleSwitch.checked;
@@ -158,7 +186,10 @@ function click(d) {
     }
   }
   if (i >= visited.length) {
-    alert("FINISHED");
+    // $(".check-icon").show();
+    // setTimeout(function () {
+    //   $(".check-icon").hide();
+    // }, 2000);
   }
 }
 
@@ -322,6 +353,7 @@ function endDragLine(d) {
 //CLEAR
 d3.select("#clear").on("click", () => {
   svg.on("mousedown", addNode).on("mousemove", updateDragLine);
+  //d3.select("table").remove();
   nodes.splice(0);
   links.splice(0);
   d3.selectAll("text").remove();
@@ -330,7 +362,6 @@ d3.select("#clear").on("click", () => {
   i = 1;
   restart();
 });
-
 //
 
 // var lastKeyDown = -1;
@@ -420,18 +451,3 @@ function click(d) {
   }
 }
 */
-
-// function toggleSwitchChanged() {
-//   var toggleSwitch = document.getElementById("toggleSwitch");
-//   var isChecked = toggleSwitch.checked;
-
-//   if (isChecked) {
-//     // Текущее состояние переключателя включено
-//     // Вы можете выполнить нужные действия здесь
-//     console.log("Переключатель включен");
-//   } else {
-//     // Текущее состояние переключателя выключено
-//     // Вы можете выполнить нужные действия здесь
-//     console.log("Переключатель выключен");
-//   }
-// }

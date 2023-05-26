@@ -6,24 +6,6 @@ body {
   margin: auto;
 }
 
-button {
-  display: inline-block;
-  padding: 5px 10px;
-  background-color: #eee;
-  border: 1px solid #000000;
-  border-radius: 20px;
-  margin-top: 10px;
-  color: #000000;
-}
-
-button:hover {
-  background-color: #ddd;
-}
-
-button:active {
-  background-color: #ccc;
-}
-
 #svg-wrap {
   margin: 10px;
 }
@@ -73,15 +55,13 @@ svg {
 .switch {
   position: relative;
   display: inline-block;
+  top: 14px;
   width: 120px;
   height: 34px;
-  border: #000000;
-  border-width: 4px;
  }
  
  .switch input {
   display: none;
-  
  }
  
  .slider {
@@ -141,3 +121,15 @@ svg {
  input:checked + .slider:after {
   content: 'DFS';
  }
+table {
+  border-collapse: collapse;
+  margin: 20px;
+  position: absolute;
+  top: 60px;
+}
+th,
+td {
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+}
