@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Graph</title>
+  <link rel="stylesheet" href="/css/search.css">
+  <!-- <link rel="stylesheet" href="css/anim.css"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <hr>
+  <div>
+    <h3 class="text-center">Обходы в глубину и ширину</h3>
+    <div class="d-flex align-items-center flex-column ">
+      <div class="accordion" id="accordionExample" style="width: 50rem;">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+              aria-expanded="true" aria-controls="collapseOne">
+              Обход графа в глубину (DFS)
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <p style="padding: 5px;"><strong>DFS (Depth-First Search)</strong> - это алгоритм обхода графа, который
+                исследует вершины
+                или узлы графа, следуя по пути как можно глубже, прежде чем вернуться назад. В случае ориентированного
+                графа (также известного как направленный граф), каждое ребро имеет определенное направление, что
+                указывает на одностороннюю связь между вершинами. Алгоритм DFS может быть реализован с помощью рекурсии.
+                Вот описание алгоритма DFS с рекурсией для ориентированного графа:
+              </p>
+              <ol class="list-group list-group-numbered ">
+                <li class="list-group-item ">Начните с выбора вершины (узла) в качестве отправной точки.</li>
+                <li class="list-group-item">Пометьте начальную вершину как посещенную или добавьте его в набор
+                  посещенных
+                  вершин,
+                  чтобы отслеживать их.</li>
+                <li class="list-group-item">Исследуйте исходящие ребра текущей вершины. Это ребра, которые начинаются от
+                  текущей
+                  вершины и идут к его соседям.</li>
+                <li class="list-group-item">Для каждого непосещенного соседа рекурсивно примените алгоритм DFS к этому
+                  соседу.
+                </li>
+                <li class="list-group-item ">Если все соседи текущей вершины были посещены или соседей нет, вернитесь к
+                  предыдущеЙ вершине.</li>
+                <li class="list-group-item">Повторяйте шаги 3-5, пока не будут посещены все узлы или не будет выполнено
+                  желаемое
+                  условие.</li>
+              </ol>
+              <p style="padding: 5px;">Этот рекурсивный алгоритм DFS исследует вершины графа в глубину,
+                посещая
+                все достижимые вершины из начальной вершины, прежде чем перейти к следующей непосещенной вершине.</p>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Обход графа в ширину (BFS)
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <strong>BFS (Breadth-First Search)</strong> - это алгоритм обхода графа, который исследует вершины или
+              узлы в графе,
+              посещая все вершины на одном уровне перед переходом на следующий уровень. Вот описание алгоритма BFS для
+              ориентированного графа:
+              <ol class="list-group list-group-numbered ">
+                <li class="list-group-item ">Инициализируйте очередь для хранения вершин, которые нужно посетить, и
+                  массив для отслеживания посещенных вершин. Изначально отметьте все вершины как
+                  непосещенные.</li>
+                <li class="list-group-item">Выберите начальную вершину и поместите ее в очередь. Отметьте ее как
+                  посещенную.</li>
+                <li class="list-group-item">Извлеките вершину из начала очереди и обработайте ее.</li>
+                <li class="list-group-item">Для каждого непосещенного соседа обработанной вершины, поместите его в
+                  очередь и отметьте как посещенный.
+                </li>
+                <li class="list-group-item ">Повторяйте шаги 4-5 до тех пор, пока все соседи обработанной вершины не
+                  будут посещены.</li>
+                <li class="list-group-item">Повторяйте шаги 4-6 до тех пор, пока очередь не станет пустой.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="adjacency-map-container"></div>
+  </div>
+  <div id=".container-sm">
+    <div style="text-align: center; margin: 10px;">
+      <button type="button" id="clear" class="btn btn-warning" style="border-radius: 40px;">CLEAR and
+        RESTART</button>
+      <label class="switch">
+        <input type="checkbox" id="toggleSwitch">
+        <span class="slider"></span>
+      </label>
+      <h4 id="afterSol"></h4>
+    </div>
+    <!-- <div id="matrix"></div> -->
+    <div id="svg-wrap">
+    </div>
+  </div>
+  <div class="d-flex align-items-center flex-column">
+    <a class="btn btn-secondary text-center" role="button" href="..">Назад</a>
+  </div>
+  <hr>
+</body>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="../js/search.js"></script>
+
+</html>

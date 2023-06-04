@@ -1,15 +1,6 @@
 body {
   margin: auto;
 }
-html {
-  height: 100%;
-  
-}
-#centerContainer { 
-  width: 1000px;
-  text-align: left;
-  margin: 0px auto; 
-}
 
 #container {
   margin: auto;
@@ -24,32 +15,22 @@ svg {
   display: block;
   margin: auto;
   border: 2px solid #000000;
-  background-color: #f7efef;
 }
 
 .title {
   font: bold 30px sans-serif;
 }
 
-.weight{
-  font: 15px sans-serif;
-  paint-order: stroke;
-  stroke: #f7efef;
-  stroke-width: 3px;
-  stroke-linecap: butt;
-  stroke-linejoin: miter;
-}
-
 .edge {
   stroke: #000000;
-  stroke-width: 15px;
+  stroke-width: 4px;
   stroke-linecap: round;
   stroke-linejoin: round;
   cursor: default;
 }
 
 .edge:hover {
-  stroke: #7a5e5e;
+  stroke: #bb2323;
 }
 .dragLine {
   stroke: #242424;
@@ -59,11 +40,11 @@ svg {
 .vertex {
   cursor: pointer;
   stroke: #000000;
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 .vertex:hover {
-  stroke: #540000;
+  stroke: #445400;
   stroke-width: 4px;
 }
 
@@ -142,13 +123,18 @@ svg {
  }
 table {
   border-collapse: collapse;
-  margin: 20px;
-  position: absolute;
-  top: 60px;
+  margin: 10px;
+  position: fixed;
+  top: 60%;
+  left: 80%;
 }
-th,
-td {
-  border: 1px solid black;
-  padding: 10px;
-  text-align: center;
+.adjacency-table {
+  border-collapse: collapse;
+  /* Add additional styles as needed */
+}
+
+.adjacency-table td {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  /* Add additional styles as needed */
 }

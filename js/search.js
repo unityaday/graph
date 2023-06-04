@@ -33,9 +33,6 @@ var arrowPoints = [
   [0, 5],
   [5, 2.5],
 ];
-
-$(".check-icon").hide();
-
 svg
   .append("defs")
   .append("marker")
@@ -96,7 +93,6 @@ function restart() {
       d3.event.stopPropagation();
     })
     .on("contextmenu", removeEdge)
-    .on("mouseover", (d) => {})
     .merge(edges);
 
   vertices = vertices.data(nodes, (d) => d.id);
@@ -186,10 +182,10 @@ function click(d) {
     }
   }
   if (i >= visited.length) {
-    // $(".check-icon").show();
-    // setTimeout(function () {
-    //   $(".check-icon").hide();
-    // }, 2000);
+    var congratz = document.getElementById("afterSol");
+    congratz.textContent = "Правильно!...";
+
+    setTimeout(() => clearSvg(), 2400);
   }
 }
 
@@ -207,6 +203,7 @@ function dfs(startNodeId) {
     adjacencyList[node.id] = adjacencyList[node.id].toSorted((a, b) => a - b);
   }
   console.log(adjacencyList);
+  displayAdj(adjacencyList);
   function dfsHelper(nodeId) {
     visited.push(nodeId);
     for (const neighborId of adjacencyList[nodeId]) {
@@ -272,6 +269,7 @@ function displayAdj(adjacencyList) {
 function turnOff() {
   svg.on("mousedown", null).on("mousemove", null);
   d3.selectAll("circle").on("mousedown", null).on("mouseup", null);
+  d3.selectAll("line").on("contextmenu", null);
 }
 
 //
@@ -372,7 +370,10 @@ function endDragLine(d) {
 }
 
 //CLEAR
-d3.select("#clear").on("click", () => {
+d3.select("#clear").on("click", () => clearSvg());
+
+function clearSvg() {
+  document.getElementById("afterSol").textContent = "";
   svg.on("mousedown", addNode).on("mousemove", updateDragLine);
   //d3.select("table").remove();
   nodes.splice(0);
@@ -383,7 +384,7 @@ d3.select("#clear").on("click", () => {
   visited = [];
   i = 1;
   restart();
-});
+}
 //
 
 // var lastKeyDown = -1;
