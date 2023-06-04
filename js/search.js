@@ -310,11 +310,9 @@ function removeEdge(d) {
 }
 
 var mousedownNode = null;
-var mouseupNode = null;
 
 function resetMouseVar() {
   mousedownNode = null;
-  mouseupNode = null;
 }
 
 function hideDragLine() {
@@ -375,102 +373,18 @@ d3.select("#clear").on("click", () => clearSvg());
 function clearSvg() {
   document.getElementById("afterSol").textContent = "";
   svg.on("mousedown", addNode).on("mousemove", updateDragLine);
-  //d3.select("table").remove();
+
+  //Чистка данных
   nodes.splice(0);
   links.splice(0);
+
+  //Удаление отображения списка смежности и всех элементов с тегом text
   d3.selectAll("table").remove();
   d3.selectAll("text").remove();
+
+  //
   lastNodeId = -1;
   visited = [];
   i = 1;
   restart();
 }
-//
-
-// var lastKeyDown = -1;
-
-// d3.select(window).on("keydown", keydown).on("keyup", keyup);
-
-// function keydown() {
-//   if (lastKeyDown !== -1) return;
-//   lastKeyDown = d3.event.key;
-//   if (lastKeyDown === "Control") {
-//     vertices.call(
-//       d3
-//         .drag()
-//         .on("start", (d) => {
-//           if (!d3.event.active) simulation.alphaTarget(1).restart();
-//           d.fx = d.x;
-//           d.fy = d.y;
-//         })
-//         .on("drag", (d) => {
-//           d.fx = d3.event.x;
-//           d.fy = d3.event.y;
-//         })
-//         .on("end", (d) => {
-//           if (!d3.event.active) simulation.alphaTarget(0);
-//           d.fx = null;
-//           d.fy = null;
-//         })
-//     );
-//   }
-// }
-
-// function keyup() {
-//   lastKeyDown = -1;
-//   if (d3.event.key === "Control") {
-//     vertices.on("mousedown", null);
-//   }
-// }
-
-// DFS
-/*
-var stack = [];
-var visited = new Set();
-var nextVertex = null;
-
-function click(d) {
-  console.log(visited);
-  if (visited.size == 0) {
-    d3.select(this).transition().style("fill", "green");
-    visited.add(d.id);
-    for (var i = 0; i < links.length; i++) {
-      if (links[i].source.id === d.id) {
-        nextVertex = links[i].target.id;
-        stack.push(d.id);
-        break;
-      }
-    }
-  } else if (nextVertex == d.id) {
-    nextVertex = null;
-    d3.select(this).transition().style("fill", "green");
-    visited.add(d.id);
-    for (var i = 0; i < links.length; i++) {
-      if (links[i].source.id === d.id && !visited.has(links[i].target.id)) {
-        nextVertex = links[i].target.id;
-        stack.push(d.id);
-        break;
-      }
-    }
-    if (nextVertex == null) {
-      for (var k = 0; k <= stack.length; k++) {
-        backstep = stack.pop();
-        for (var i = 0; i < links.length; i++) {
-          if (
-            links[i].source.id === backstep &&
-            !visited.has(links[i].target.id)
-          ) {
-            stack.push(backstep);
-            nextVertex = links[i].target.id;
-            break;
-          }
-        }
-      }
-    }
-    if (nextVertex == null && visited.size == nodes.length) {
-      alert("That's it!");
-    }
-    console.log("Next Step is: " + nextVertex);
-  }
-}
-*/
