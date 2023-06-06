@@ -167,21 +167,14 @@ function click(d) {
 
 function kruskal() {
   var minTree = [];
-  // Sort links by weight in ascending order
   const sortedLinks = links.sort((a, b) => a.weight - b.weight);
-
-  // Initialize an array to store the parent of each node
   const parent = nodes.map((node) => node.id);
-
-  // Find the parent of a node using the union-find algorithm
   function findRoot(node) {
     if (parent[node] !== node) {
       parent[node] = findRoot(parent[node]);
     }
     return parent[node];
   }
-
-  // Union two sets
   function union(x, y) {
     const xRoot = findRoot(x);
     const yRoot = findRoot(y);
@@ -189,8 +182,6 @@ function kruskal() {
       parent[yRoot] = xRoot;
     }
   }
-
-  // Iterate over the sorted links and add them to the minimum spanning tree
   for (const link of sortedLinks) {
     const { source, target } = link;
     if (findRoot(source) !== findRoot(target)) {

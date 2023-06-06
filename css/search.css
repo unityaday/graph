@@ -125,8 +125,9 @@ table {
   border-collapse: collapse;
   margin: 10px;
   position: fixed;
-  top: 60%;
-  left: 80%;
+  top: 52%;
+  left: 76%;
+  background-color: rgb(233, 215, 247)
 }
 .adjacency-table {
   border-collapse: collapse;

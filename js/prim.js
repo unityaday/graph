@@ -191,17 +191,11 @@ function click(d) {
 function prim(startNode) {
   //fixer, idk why??
   links[links.length - 1].weight = bugResolver;
-  // Create a set to keep track of visited nodes
   const visited = new Set();
-  // Create an empty minimum spanning tree
   const minimumSpanningTree = [];
-  // Add the starting node to the visited set
   visited.add(startNode);
-  // Keep track of the total weight of the minimum spanning tree
   let totalWeight = 0;
-  // Iterate until all nodes are visited
   while (visited.size < nodes.length) {
-    // Find the minimum weight link connecting visited and unvisited nodes
     let minWeight = Infinity;
     let minLink = null;
     for (var link of links) {
@@ -218,10 +212,8 @@ function prim(startNode) {
         }
       }
     }
-    // Add the minimum weight link to the minimum spanning tree
     minimumSpanningTree.push(minLink);
     totalWeight += minWeight;
-    // Add the new node to the visited set
     if (!visited.has(minLink.source)) {
       visited.add(minLink.source);
     } else {
