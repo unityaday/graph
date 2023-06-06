@@ -1,6 +1,17 @@
 var nodes = [];
 var links = [];
 
+function clickGenerator() {
+  var numN = document.getElementById("numNodes").value;
+  var numL = document.getElementById("numLinks").value;
+  if (numL < numN - 1 || numL > (numN * (numN - 1)) / 2) {
+    alert("ERROR");
+    return;
+  }
+  generateRandomGraph(parseInt(numN), parseInt(numL));
+  restart();
+}
+
 function generateRandomGraph(numNodes, numLinks) {
   nodes = [];
   links = [];
@@ -15,7 +26,7 @@ function generateRandomGraph(numNodes, numLinks) {
     }
     const source = sRandom;
     const target = tRandom;
-    const weight = getRandomInt(2, 15);
+    const weight = getRandomInt(1, 17);
 
     var randomLink = { source, target, weight };
     var existingLink = links.find(
@@ -34,14 +45,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-generateRandomGraph(7, 9);
-
-function reGenerator() {
-  nodes.splice(0);
-  links.splice(0);
-  generateRandomGraph(7, 9);
-  restart();
-}
+generateRandomGraph(6, 8);
 
 //dont touch it's somehow fixes problem
 var bugResolver = links[links.length - 1].weight;
@@ -71,10 +75,10 @@ var simulation = d3
     "charge",
     d3
       .forceManyBody()
-      .strength(-1000)
+      .strength(-2000)
       .distanceMax(w / 2)
   )
-  .force("link", d3.forceLink().distance(125))
+  .force("link", d3.forceLink().distance(120))
   .force("x", d3.forceX(w / 2))
   .force("y", d3.forceY(h / 2))
   .on("tick", tick);
@@ -128,7 +132,7 @@ function restart() {
     .attr("id", (d) => "l" + d.id)
     .style("pointer-events", "none")
     .merge(titles);
-  weights = weights.data(links);
+  weights = weights.data(links, (d) => d.weight);
   weights.exit().remove();
   weights = weights
     .enter()
@@ -154,6 +158,8 @@ function clickNode(d) {
     startInfo.style.display = "none";
     var button = document.getElementById("buttonRandomize");
     button.classList.add("disabled");
+    var button2 = document.getElementById("buttonRandomize2");
+    button2.classList.add("disabled");
     minTree = prim(d);
     d3.select(this)
       .transition()

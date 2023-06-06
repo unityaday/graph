@@ -63,7 +63,7 @@ var simulation = d3
     "charge",
     d3
       .forceManyBody()
-      .strength(-600)
+      .strength(-1000)
       .distanceMax(w / 2)
   )
   .force("link", d3.forceLink().distance(120))
@@ -88,7 +88,7 @@ function restart() {
     .enter()
     .append("line")
     .attr("class", "edge")
-    .attr("marker-end", "url(#arrow)")
+    //.attr("marker-end", "url(#arrow)")
     .on("mousedown", () => {
       d3.event.stopPropagation();
     })
@@ -133,6 +133,43 @@ function restart() {
 }
 
 restart();
+
+function clickGenerator() {
+  var numNodes = document.getElementById("numNodes").value;
+  generateRandomGraph(parseInt(numNodes));
+  restart();
+}
+
+function generateRandomGraph(numNodes) {
+  nodes = [];
+  links = [];
+  for (let i = 0; i < numNodes; i++) {
+    nodes.push({ id: i });
+  }
+  numLinks = getRandomInt(numNodes - 1, (numNodes * (numNodes - 1)) / 2);
+  for (let i = 0; i < numLinks; i++) {
+    var sRandom = getRandomInt(0, numNodes - 1);
+    var tRandom = getRandomInt(0, numNodes - 1);
+    while (sRandom == tRandom) {
+      tRandom = getRandomInt(0, numNodes - 1);
+    }
+    const source = sRandom;
+    const target = tRandom;
+    var randomLink = { source, target };
+    var existingLink = links.find(
+      (link) =>
+        (link.source === source && link.target === target) ||
+        (link.source === target && link.target === source)
+    );
+    if (!existingLink) {
+      links.push(randomLink);
+    } else i--;
+  }
+  return { nodes, links };
+}
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 var i = 1;
 
@@ -198,6 +235,7 @@ function dfs(startNodeId) {
   }
   for (const link of links) {
     adjacencyList[link.source.id].push(link.target.id);
+    adjacencyList[link.target.id].push(link.source.id);
   }
   for (const node of nodes) {
     adjacencyList[node.id] = adjacencyList[node.id].toSorted((a, b) => a - b);
@@ -225,6 +263,7 @@ function bfs(startNodeId) {
   }
   for (const link of links) {
     adjacencyList[link.source.id].push(link.target.id);
+    adjacencyList[link.target.id].push(link.source.id);
   }
   for (const node of nodes) {
     adjacencyList[node.id] = adjacencyList[node.id].toSorted((a, b) => a - b);

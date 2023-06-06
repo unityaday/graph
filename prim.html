@@ -31,18 +31,14 @@
                     исходного графа с минимально возможным общим весом ребра.</p>
                 <p>Вот пошаговое описание алгоритма Прима для неориентированного графа:</p>
                 <ol class="list-group list-group-numbered">
-                    <li class="list-group-item ">Инициализируйте очередь для хранения вершин, которые нужно посетить, и
-                        массив для отслеживания посещенных вершин. Изначально отметьте все вершины как
-                        непосещенные.</li>
-                    <li class="list-group-item">Выберите начальную вершину и поместите ее в очередь. Отметьте ее как
-                        посещенную.</li>
-                    <li class="list-group-item">Извлеките вершину из начала очереди и обработайте ее.</li>
-                    <li class="list-group-item">Для каждого непосещенного соседа обработанной вершины, поместите его в
-                        очередь и отметьте как посещенный.
+                    <li class="list-group-item">Выберите начальную вершину.</li>
+                    <li class="list-group-item">Выберите наикратчайшее ребро* из этой вершины.<div class=""></div>
                     </li>
-                    <li class="list-group-item ">Повторяйте шаги 4-5 до тех пор, пока все соседи обработанной вершины не
-                        будут посещены.</li>
-                    <li class="list-group-item">Повторяйте шаги 4-6 до тех пор, пока очередь не станет пустой.</li>
+                    <li class="list-group-item">Выбирите такое минимальное ребро, которое связала бы две разные вершины,
+                        одна которая отмечена, а другая непосещенная.
+                    </li>
+                    <li class="list-group-item">Повторяйте до тех пор пока не получите остовное дерево.</li>
+                    *Если есть несколько, выберите один случайным образом.
                 </ol>
 
             </div>
@@ -51,6 +47,12 @@
                     id="buttonRandomize">Randomize</button>
                 <h4 id="afterSol"></h4>
                 <h4 id="start">Выбери начальную вершину</h4>
+                <label for="numNodes">Количество вершин</label>
+                <input type="number" id="numNodes">
+                <label for="numLinks">Количество ребер</label>
+                <input type="number" id="numLinks">
+                <button type="button" onclick="clickGenerator()" class="btn btn-dark" style="border-radius: 40px;"
+                    id="buttonRandomize2">Создать</button>
             </div>
 
 

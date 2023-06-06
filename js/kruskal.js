@@ -15,7 +15,7 @@ function generateRandomGraph(numNodes, numLinks) {
     }
     const source = sRandom;
     const target = tRandom;
-    const weight = getRandomInt(1, 17);
+    const weight = getRandomInt(1, 18);
 
     var randomLink = { source, target, weight };
     var existingLink = links.find(
@@ -34,9 +34,21 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function clickGenerator() {
+  var numN = document.getElementById("numNodes").value;
+  var numL = document.getElementById("numLinks").value;
+  if (numL < numN - 1 || numL > (numN * (numN - 1)) / 2) {
+    alert("ERROR");
+    return;
+  }
+  generateRandomGraph(parseInt(numN), parseInt(numL));
+  minTree = kruskal();
+  restart();
+}
+
 generateRandomGraph(7, 9);
 console.log(links);
-minTree = kruskal();
+var minTree = kruskal();
 
 //dont touch it's somehow fixes problem
 var bugResolver = links[links.length - 1].weight;
@@ -66,7 +78,7 @@ var simulation = d3
     "charge",
     d3
       .forceManyBody()
-      .strength(-1000)
+      .strength(-2000)
       .distanceMax(w / 2)
   )
   .force("link", d3.forceLink().distance(125))
@@ -122,7 +134,7 @@ function restart() {
     .attr("id", (d) => "l" + d.id)
     .style("pointer-events", "none")
     .merge(titles);
-  weights = weights.data(links);
+  weights = weights.data(links, (d) => d.weight);
   weights.exit().remove();
   weights = weights
     .enter()
@@ -189,7 +201,6 @@ function kruskal() {
       union(source, target);
     }
   }
-
   return minTree;
 }
 
